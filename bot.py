@@ -21,6 +21,8 @@ BOT_TOKEN = os.environ["BOT_TOKEN"]
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 WEBHOOK_URL = os.environ.get("WEBHOOK_URL")  # set this on Render, leave unset for local/Oracle polling
+if WEBHOOK_URL:
+    WEBHOOK_URL = WEBHOOK_URL.rstrip("/")
 PORT = int(os.environ.get("PORT", "10000"))
 DB_PATH = os.environ.get("DB_PATH", "blind_date.db")
 NUM_QUESTIONS = int(os.environ.get("NUM_QUESTIONS", "6"))
