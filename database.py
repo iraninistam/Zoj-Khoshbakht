@@ -6,27 +6,24 @@ _pool = None
 
 
 async def init_database():
-
     global _pool
 
     _pool = await asyncpg.create_pool(
         DATABASE_URL,
         min_size=1,
-        max_size=10
+        max_size=10,
+        statement_cache_size=0
     )
 
 
 async def close_database():
-
     global _pool
 
     if _pool:
         await _pool.close()
 
 
-
 async def fetch(query, *args):
-
     async with _pool.acquire() as conn:
         return await conn.fetch(
             query,
@@ -34,9 +31,7 @@ async def fetch(query, *args):
         )
 
 
-
 async def fetchrow(query, *args):
-
     async with _pool.acquire() as conn:
         return await conn.fetchrow(
             query,
@@ -44,15 +39,12 @@ async def fetchrow(query, *args):
         )
 
 
-
 async def execute(query, *args):
-
     async with _pool.acquire() as conn:
         return await conn.execute(
             query,
             *args
         )
-
 
 
 # -------------------------
@@ -64,7 +56,6 @@ async def save_user(
     username,
     first_name
 ):
-
     await execute(
         """
         INSERT INTO users
@@ -94,11 +85,9 @@ async def save_user(
     )
 
 
-
 async def get_user(
     telegram_id
 ):
-
     return await fetchrow(
         """
         SELECT *
@@ -110,11 +99,9 @@ async def get_user(
     )
 
 
-
 async def get_user_by_username(
     username
 ):
-
     return await fetchrow(
         """
         SELECT *
@@ -122,9 +109,8 @@ async def get_user_by_username(
         WHERE username=$1
         """,
 
-        username.replace("@","")
+        username.replace("@", "")
     )
-
 
 
 # -------------------------
@@ -136,7 +122,6 @@ async def add_log(
     status,
     message
 ):
-
     await execute(
         """
         INSERT INTO logs
@@ -156,9 +141,7 @@ async def add_log(
     )
 
 
-
 async def get_logs(limit=10):
-
     return await fetch(
         """
         SELECT *
